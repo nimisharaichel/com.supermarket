@@ -1,11 +1,14 @@
 package com.supermarket.utilities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 
 public class GeneralUtility {
 	WebDriver driver;
@@ -54,5 +57,16 @@ public class GeneralUtility {
 		return element.getText().equals(expectedText);
 		
 	}
-	
+	public String getCssColorOfElement(WebElement element,String value) {
+		return element.getCssValue(value);
+	}
+	public String getAttributeOfElement(WebElement element,String value) {
+		return element.getAttribute(value);
+	}
+	public static  String get_TimeStamp() {
+		String timeStamp=new SimpleDateFormat("dd_MM_yyyy_hh_mm_ss").format(new Date());
+		return timeStamp;
+		
+	}
 }
+

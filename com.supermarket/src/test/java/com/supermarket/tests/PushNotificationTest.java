@@ -3,9 +3,11 @@ package com.supermarket.tests;
 import java.util.HashMap;
 
 import org.openqa.selenium.By;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.supermarket.base.Base;
+import com.supermarket.constants.Constants;
 import com.supermarket.pages.LogInPage;
 import com.supermarket.pages.PushNotificationPage;
 import com.supermarket.utilities.PdfReader;
@@ -14,39 +16,40 @@ public class PushNotificationTest extends Base {
 	PushNotificationPage pushnotify;
 	LogInPage loginpage;
 	PdfReader pdfreader;
-	
-	@Test
+
+	@Test(priority = 1)
 	public void verify_PushNotification() {
-		HashMap<String, String> map=new HashMap<String,String>();
-	
+		HashMap<String, String> map = new HashMap<String, String>();
 		loginpage = new LogInPage(driver);
 		loginpage.logIn();
-		pushnotify=new PushNotificationPage(driver);
+		pushnotify = new PushNotificationPage(driver);
 		pushnotify.click_PushNotificationButton();
-		pushnotify.getTextSuccessAlert_PushNotification("Track", "Track Notification");
-	    System.out.println(pushnotify.getTextAlert_PushNotification());
-	    
-	    pdfreader=new PdfReader();
-	   map= pdfreader.readPdf_Data("PushNotification");
-	   System.out.println(map.get("Title 1"));
-	  // System.out.println(map);
-	}
-	
-	  @Test(dataProvider="twoDimensional",dataProviderClass =com.supermarket.base.DataProviderClass.class)
-	  public void create_PushNotificationDataByDataProvider(String data1,String data2) {
-		  
-		    loginpage = new LogInPage(driver);
-			loginpage.logIn();
-			pushnotify=new PushNotificationPage(driver);
-			pushnotify.click_PushNotificationButton();
-			
-		  driver.findElement(By.xpath("//input[@id='title']")).sendKeys(data1);
-		  driver.findElement(By.xpath("//input[@id='description']")).sendKeys(data2);
-		  driver.findElement(By.xpath("//button[@class='btn btn-block-sm btn-info']")).click();
-		  
-		  
-	  }
-	    
+		pdfreader = new PdfReader();
+		map = pdfreader.readPdf_Data("PushNotification");
+		String deliveryBoyTitle= map.get("Title 1");
+		String deliveryBoyDescription= map.get("Description1");
+		pushnotify.getTextSuccessAlert_PushNotification(deliveryBoyTitle,deliveryBoyDescription);
+		String expectedResult = Constants.SUCESSALERTMESSAGE_PUSHNOTIFICATION;
+		String actualResult = pushnotify.getAttribute_PushNotification();
+		Assert.assertEquals(actualResult, expectedResult);
 
-	
+	}
+
+	@Test(dataProvider = "PushNotificationExcelData", dataProviderClass = com.supermarket.base.DataProviderClass.class,priority = 2)
+	public void verify_PushNotificationDataByDataProvider(String message, String description) {
+
+		loginpage = new LogInPage(driver);
+		loginpage.logIn();
+		pushnotify = new PushNotificationPage(driver);
+		pushnotify.click_PushNotificationButton();
+		pushnotify.enterDataForPushNotification(message);
+		pushnotify.enterData_PushNotification(description);
+		pushnotify.click_SaveButton();
+		String expectedResult = Constants.SUCESSALERTMESSAGE_PUSHNOTIFICATION;
+		String actualResult = pushnotify.getAttribute_PushNotification();
+		Assert.assertEquals(actualResult, expectedResult);
+
+	}
+
+
 }

@@ -1,5 +1,6 @@
 package com.supermarket.pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -26,6 +27,9 @@ private WebElement sendButtonLink;
 @FindBy(xpath="//div[@class='alert alert-success alert-dismissible']")
 private WebElement alertSuccessText;
 
+@FindBy(xpath="//button[@class='btn btn-block-sm btn-info']")
+private WebElement saveButton;
+
 public PushNotificationPage(WebDriver driver) {
 	this.driver=driver;
 	PageFactory.initElements(driver, this);
@@ -44,19 +48,27 @@ public void enter_DescriptionField(String description) {
 
 
 
-public String getTextSuccessAlert_PushNotification(String title,String description) {
+public void getTextSuccessAlert_PushNotification(String title,String description) {
 	enter_TitleField(title);
 	enter_DescriptionField(description);
 	sendButtonLink.click();
-	return getTextAlert_PushNotification();
-}
-
-public String getTextAlert_PushNotification() {
-	generalutility=new GeneralUtility(driver);
-	return generalutility.get_Text(alertSuccessText);
 	
 }
 
+public String getAttribute_PushNotification() {
+	generalutility=new GeneralUtility(driver);
+	return generalutility.getAttributeOfElement(alertSuccessText,"class");
+	
+}
+public void enterDataForPushNotification(String data) {
+	driver.findElement(By.xpath("//input[@id='title']")).sendKeys(data);
+}
+public void enterData_PushNotification(String data) {
+	driver.findElement(By.xpath("//input[@id='description']")).sendKeys(data);
+}
+public void click_SaveButton() {
+	saveButton.click();
+}
 
 
 

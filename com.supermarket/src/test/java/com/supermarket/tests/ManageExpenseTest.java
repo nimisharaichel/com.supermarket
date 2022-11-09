@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import com.supermarket.base.Base;
 import com.supermarket.constants.Constants;
@@ -18,18 +19,12 @@ public class ManageExpenseTest extends Base {
 	PdfReader pdfreader;
 	
 	@Test
-	public void verify_ManageExpenseLogoAndButton() {
+	public void verify_ManageExpenseLogoSymbol() {
 		
 		loginpage=new LogInPage(driver);
 		loginpage.logIn();
 		manageexpensepage=new ManageExpensePage(driver);
 		Assert.assertTrue(manageexpensepage.isDisplayed_LogoSymbolOfManageExpense());
-		
-		manageexpensepage.click_ManageExpensePage();
-		manageexpensepage.click_expenseCategory();
-		manageexpensepage.click_newButtonOfExpenseCategory();
-		Assert.assertTrue(manageexpensepage.expenseCategoryNewButton_IsEnable());
-		
 	}
 	
 	
@@ -41,48 +36,63 @@ public class ManageExpenseTest extends Base {
 		manageexpensepage.click_ManageExpensePage();
 		manageexpensepage.click_expenseCategory();
 		manageexpensepage.click_newButtonOfExpenseCategory();
-		 
-		String title1;
-		String title2;
-		String title3;
-		HashMap<String, String> map=new HashMap<String,String>();
+	    HashMap<String, String> map=new HashMap<String,String>();
 		pdfreader=new PdfReader();
 	    map= pdfreader.readPdf_Data("ExpenseCategory");
-		title1= map.get("Title 1");
-		title2=map.get("Title 2");
-		title3=map.get("Title 3");
-		
-		manageexpensepage.enter_titleOfExpenseCategoryFromPdf(title1);
-		manageexpensepage.enter_titleOfExpenseCategoryFromPdf(title2);
-		manageexpensepage.enter_titleOfExpenseCategoryFromPdf(title3);
+		String manageExpenseTitle1= map.get("Title 1");
+		manageexpensepage.enter_titleOfExpenseCategoryFromPdf(manageExpenseTitle1);
 		manageexpensepage.click_SaveButtonOfExpenseCategory();
-		System.out.println("The alert message:"+ manageexpensepage .getText_AlertUnsucessMessageOfExpenseCategory());
-		//System.out.println(manageexpensepage.getText_SucessMessageOfExpenseCategory());
-		Assert.assertTrue(manageexpensepage.getAlertMessage_IsDisplayed());
+		String expectedResult=Constants.DANGERALERT_EXPENSECATEGORY;
+	    String actualResult=  manageexpensepage .getAttribute_AlertUnsucessMessageOfExpenseCategory();
+		Assert.assertEquals(actualResult, expectedResult);
 		
 	}
+	
 	@Test
-	public void verify_SubManageExpenseFunctionalities() {
+	public void verify_UpdateFunctionalityOfSubManageExpense() {
+		loginpage=new LogInPage(driver);
+		SoftAssert softassert=new SoftAssert();
+		loginpage.logIn();
+		manageexpensepage=new ManageExpensePage(driver);
+		manageexpensepage.click_ManageExpensePage();
+		manageexpensepage.click_SubManageExpenseField();
+		manageexpensepage.click_EditOptionOfSubManageExpense();
+		manageexpensepage.enter_dataForUpdationInSubManageExpense();
+		manageexpensepage.click_UpdateEditButtonOfSubManageExpense();
+		String expectedResult=Constants.EXPECTEDRESULT_UPADTEDDATAOFSUBMANAGEEXPENSE;
+		String actualResult=manageexpensepage.getText_OfUpdateAlertMessageForSubManageExpense();
+	    softassert.assertEquals(actualResult, expectedResult);
+	}
+	@Test
+	public void verify_DeleteFunctionalityOfSubManageExpense() {
 		loginpage=new LogInPage(driver);
 		loginpage.logIn();
 		manageexpensepage=new ManageExpensePage(driver);
 		manageexpensepage.click_ManageExpensePage();
 		manageexpensepage.click_SubManageExpenseField();
-		manageexpensepage.click_NewButtonOfSubManageExpense();
-		manageexpensepage.click_UserFieldButtonOfSubManageExpense();
-		manageexpensepage.select_UserFieldOptionOfSubManageExpse();
-		manageexpensepage.select_CategoryFieldOptionOfSubManageExpense();
-		manageexpensepage.select_UserIdFieldOptionOfSubManageExpense();
-		manageexpensepage.select_CategoryFieldOptionOfSubManageExpense();
-		manageexpensepage.select_UserIdFieldOptionOfSubManageExpense();
-		manageexpensepage.select_PurchaseIdOptionOfSubManageExpense();
-		manageexpensepage.select_ExpenseFiledOptionOfSubManageExpense();
-		manageexpensepage.enter_amountFieldOfManageExpense("6000","Total amount is paid");
-		manageexpensepage.click_UserFileUploadOfSubManageExpense();
-		manageexpensepage.UserFileUploadOfSubManageExpense(Constants.USERFILE_UPLOADOFSUBMANAGEEXPENSE);
-		manageexpensepage.click_saveButtonOfSubManageExpense();
-		Assert.assertTrue(manageexpensepage.saveButtonOfSubManageExpense_IsSelected());
-		System.out.println(manageexpensepage.getAlertText_SubManageExpense());
-	
+		manageexpensepage.delete_DataOfSubManageExpense();
+		String expectedResult=Constants.SUCESSALERT_EXPENSECATEGORY;
+		String actualResult=manageexpensepage.getAttributeOfSuccessAlert_DeleteDataOfSubManageExpense();
+		Assert.assertEquals(actualResult, expectedResult);
+		
+		
+	}
+	@Test
+	public void verify_SearchDataOfSubManageExpense() {
+		loginpage=new LogInPage(driver);
+		loginpage.logIn();
+		manageexpensepage=new ManageExpensePage(driver);
+		manageexpensepage.click_ManageExpensePage();
+		manageexpensepage.click_SubManageExpenseField();
+		manageexpensepage.click_SearchIconOfSubManageExpense();
+		manageexpensepage.search_enterValidUserDataOfSubManageExpense();
+		manageexpensepage.enterTitleDataOfSubManageExpense("Grocery (Staff-ST)");
+		manageexpensepage.search_enterValidCategoryDataOfSubManageExpense();
+		manageexpensepage.click_SearchButtonOfSubManageExpense();
+		Assert.assertFalse(manageexpensepage.searchButtonOfSubManageExpenseIsSelected());
+		System.out.println(manageexpensepage.getText_NewWindowReportOfSubManageExpense());
+		manageexpensepage.click_BackButtonOfReport();
+		
+		
 	}
 }

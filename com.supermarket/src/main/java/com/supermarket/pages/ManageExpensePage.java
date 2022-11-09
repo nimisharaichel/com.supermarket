@@ -1,7 +1,10 @@
 package com.supermarket.pages;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -14,11 +17,13 @@ import com.supermarket.constants.Constants;
 import com.supermarket.utilities.GeneralUtility;
 import com.supermarket.utilities.PageUtility;
 import com.supermarket.utilities.PdfReader;
+import com.supermarket.utilities.WaitUtility;
 
 public class ManageExpensePage {
 	WebDriver driver;
 	GeneralUtility generalutility;
 	PageUtility pageutility;
+	WaitUtility waitutility;
 	
 
 	@FindBy(xpath="//i[@class='nav-icon fas fa-money-bill-alt']")
@@ -81,6 +86,54 @@ public class ManageExpensePage {
 	@FindBy(xpath="//div[@class='alert alert-success alert-dismissible']")
 	private WebElement alertMessageLink;
 	
+	@FindBy(xpath="//tbody//tr[7]//td[9]//a[1]")
+	private WebElement editSubManageExpenseData;
+	
+	@FindBy(xpath="//button[text()='Update']")
+	private WebElement updateButtonSubManageExpense;
+	
+	@FindBy(xpath="//div[@class='alert alert-success alert-dismissible']")
+	private WebElement alertMessageOfUpdateOfSubManageExpense;
+	
+	@FindBy(xpath="//tbody//tr[9]//td[9]//a[2]")
+	private WebElement deleteDataOfSubManageExpense;
+	
+	@FindBy(xpath="//div[@class='alert alert-success alert-dismissible']")
+	private WebElement successAlertMeassageAfterDeleteSubManageExpenseData;
+	
+	@FindBy(xpath="//a[@class='btn btn-rounded btn-primary']")
+	private WebElement searchLink;
+	
+	@FindBy(xpath="//select[@class='form-control selectpicker']")
+	private WebElement userFiledOfSearchSubManageExpense;
+	
+	@FindBy(xpath="//input[@id='ti']")
+	private WebElement enterTitleFieldofSeachSubManageExpense;
+	
+	@FindBy(xpath="//select[@id='uc']")
+	private WebElement categoryFieldOfSearchSubManageExpense;
+	
+	@FindBy(xpath="//select[@id='od']")
+	private WebElement orderIdFieldLink;
+	
+	@FindBy(xpath="//select[@id='pi']")
+	private WebElement purchaseIdSearchFieldOfSubManageExpense;
+	
+	@FindBy(xpath="//select[@id='ty']")
+	private WebElement expenseTypesSearchOfSubManageExpense;
+	
+	@FindBy(xpath="//button[@class='btn btn-danger btn-fix']")
+	private WebElement searchButtonOfSubManageExpense;
+	
+	@FindBy(xpath="//a[@class='btn btn-rounded btn-info']")
+	private WebElement reportButtonOfSerachSubManageExpense;
+	
+	@FindBy(xpath="//div[@class='col-sm-12']")
+	private WebElement nextWindowofReport;
+	
+	@FindBy(xpath="//span[@id='back']")
+	private WebElement backButtonOfReport;
+	
 	public ManageExpensePage(WebDriver driver) {
 		this.driver=driver;
 		PageFactory.initElements(driver, this);
@@ -119,6 +172,10 @@ public class ManageExpensePage {
 		return generalutility.get_Text(alertMessageLinkOfExpenseCategory);
 		
 	}
+	public String getAttribute_AlertUnsucessMessageOfExpenseCategory() {
+		generalutility=new GeneralUtility(driver);
+		return generalutility.getAttributeOfElement(alertMessageLinkOfExpenseCategory,"class");
+	}
 	public String getText_SucessMessageOfExpenseCategory() {
 		generalutility=new GeneralUtility(driver);
 		return generalutility.get_Text(alertMessage2LinkOfExpenseCategory);
@@ -133,13 +190,16 @@ public class ManageExpensePage {
 	}
 	
 	public void click_SubManageExpenseField() {
+		waitutility=new WaitUtility(driver);
+		waitutility.element_ToBeClickable(10L,"//a[@href='https://groceryapp.uniqassosiates.com/admin/list-expense']");
 		sub_ManageExpenseField.click();
 	}
 public void click_NewButtonOfSubManageExpense() {
 	newButtonOfSubManageExpense.click();
 }
 public void click_UserFieldButtonOfSubManageExpense() {
-	userButtonOfSubManageExpense.click();
+	
+	//userButtonOfSubManageExpense.click();
 }
 public void select_UserFieldOptionOfSubManageExpse() {
 
@@ -149,16 +209,20 @@ public void select_UserFieldOptionOfSubManageExpse() {
 	
 }
 public void select_CategoryFieldOptionOfSubManageExpense() {
+	
 	categoryFieldOfSubManageExpense.click();
 	pageutility=new PageUtility(driver);
-	pageutility.select_ByValue("482", categoryFieldOfSubManageExpense);
+	pageutility.select_ByValue("415", categoryFieldOfSubManageExpense);
 }
-public void select_UserIdFieldOptionOfSubManageExpense() {
-	userIdFieldOfSubManageExpense.click();
+public void select_OrderIdFieldOptionOfSubManageExpense() {
+	
+	userFiledOfSearchSubManageExpense.click();
 	pageutility=new PageUtility(driver);
-	pageutility.select_ByVisibleText("18", userIdFieldOfSubManageExpense);
+	pageutility.select_ByVisibleText("18", userFiledOfSearchSubManageExpense);
 }
 public void select_PurchaseIdOptionOfSubManageExpense() {
+	waitutility=new WaitUtility(driver);
+	waitutility.element_ToBeClickable(10L,"//select[@id='pi']");
 	purchaseIdFieldOfManageExpense.click();
 	pageutility=new PageUtility(driver);
 	pageutility.select_ByIndex(3, purchaseIdFieldOfManageExpense);
@@ -175,6 +239,14 @@ public void send_AmountFieldOfManageExpense(String amount) {
 }
 public void send_RemarkFieldOfManageExpense(String remarks) {
 	remarkFieldOfSubManageExpense.sendKeys(remarks);
+}
+public void enterData_ManageExpense() {
+	click_UserFieldButtonOfSubManageExpense();
+	select_UserFieldOptionOfSubManageExpse();
+	select_CategoryFieldOptionOfSubManageExpense();
+	select_OrderIdFieldOptionOfSubManageExpense();
+	select_PurchaseIdOptionOfSubManageExpense();
+	select_ExpenseFiledOptionOfSubManageExpense();
 }
 public void enter_amountFieldOfManageExpense(String amount,String remarks) {
 	send_AmountFieldOfManageExpense(amount);
@@ -204,4 +276,106 @@ public String getAlertText_SubManageExpense() {
 		generalutility=new GeneralUtility(driver);
 		return generalutility.get_Text(alertMessageLink);
 }
+public void click_EditOptionOfSubManageExpense() {
+	editSubManageExpenseData.click();
 }
+public void enter_dataForUpdationInSubManageExpense() {
+	click_UserFieldButtonOfSubManageExpense();
+	pageutility=new PageUtility(driver);
+	pageutility.select_ByIndex(2, userButtonOfSubManageExpense);
+	select_PurchaseIdOptionOfSubManageExpense();
+}
+public void click_UpdateEditButtonOfSubManageExpense() {
+	waitutility=new WaitUtility(driver);
+	waitutility.element_ToBeClickable(10L,"//button[text()='Update']");
+	updateButtonSubManageExpense.click();
+	
+}
+public String getText_OfUpdateAlertMessageForSubManageExpense() {
+	generalutility=new GeneralUtility(driver);
+	String string=generalutility.get_Text(alertMessageOfUpdateOfSubManageExpense);
+	String split[] = string.split("Alert!");
+	String text=split[0];
+	
+	System.out.println("The splitted string:"+text);
+	return text;
+}
+public void delete_DataOfSubManageExpense() {
+	deleteDataOfSubManageExpense.click();
+	driver.switchTo().alert().accept();
+	//driver.switchTo().alert().dismiss();
+}
+public boolean deleteButtonOfSubManageExpenseIsSelected() {
+	generalutility=new GeneralUtility(driver);
+	return generalutility.is_Selected(deleteDataOfSubManageExpense);
+}
+public String getAttributeOfSuccessAlert_DeleteDataOfSubManageExpense() {
+	generalutility=new GeneralUtility(driver);
+	return generalutility.getAttributeOfElement(successAlertMeassageAfterDeleteSubManageExpenseData,"class");
+	
+}
+public void click_SearchIconOfSubManageExpense() {
+	searchLink.click();
+}
+public void search_enterValidUserDataOfSubManageExpense() {
+	userFiledOfSearchSubManageExpense.click();
+	pageutility=new PageUtility(driver);
+	pageutility.select_ByIndex(2, userFiledOfSearchSubManageExpense);
+	
+}
+public void enterTitleDataOfSubManageExpense(String tileName) {
+	enterTitleFieldofSeachSubManageExpense.sendKeys(tileName);
+}
+public void search_enterValidCategoryDataOfSubManageExpense() {
+	userFiledOfSearchSubManageExpense.click();
+	pageutility=new PageUtility(driver);
+	pageutility.select_ByVisibleText("Grocery", categoryFieldOfSearchSubManageExpense);
+	pageutility.select_ByVisibleText("Debit Bank", expenseTypesSearchOfSubManageExpense);
+	pageutility.select_ByVisibleText("18", orderIdFieldLink);
+	pageutility.select_ByVisibleText("18", purchaseIdSearchFieldOfSubManageExpense);
+	
+	
+}
+public void click_SearchButtonOfSubManageExpense() {
+	searchButtonOfSubManageExpense.click();
+	
+}
+public boolean searchButtonOfSubManageExpenseIsSelected() {
+	generalutility=new GeneralUtility(driver);
+    return	generalutility.is_Selected(searchButtonOfSubManageExpense);
+}
+public void click_reportButtonNextWindowOfSerachSubManageExpense() {
+	reportButtonOfSerachSubManageExpense.click();
+	
+	String parentWindow=driver.getWindowHandle();
+	System.out.println("The id of current window:"+parentWindow);
+	Set<String> windows=driver.getWindowHandles();
+	System.out.println("Size of set:"+windows.size());
+	System.out.println("The set of windows:"+windows);
+
+
+for(String s:windows)
+{
+if(parentWindow.equals(s))
+{
+	System.out.println("no need to switch");
+	System.out.println(s+" "+parentWindow);
+}
+else
+{
+	driver.switchTo().window(s);
+}
+}
+
+}
+public String getText_NewWindowReportOfSubManageExpense() {
+	click_reportButtonNextWindowOfSerachSubManageExpense();
+	generalutility=new GeneralUtility(driver);
+    return	generalutility.get_Text(nextWindowofReport);
+    
+}
+public void click_BackButtonOfReport() {
+	backButtonOfReport.click();
+}
+}
+

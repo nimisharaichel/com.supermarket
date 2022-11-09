@@ -8,9 +8,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.ITestListener;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
+
 import com.supermarket.constants.Constants;
+import com.supermarket.utilities.ScreenShot;
 import com.supermarket.utilities.WaitUtility;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -19,6 +24,7 @@ public class Base {
 	public WebDriver driver;
 	Properties prop;
 	FileInputStream ip;
+	ScreenShot screenshot;
 
 	public Base() {
 		prop = new Properties();
@@ -48,20 +54,33 @@ public class Base {
 		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(WaitUtility.IMPLICIT_WAIT));
 		driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(WaitUtility.PAGE_LOAD_WAIT));
 	}
-
-	@BeforeMethod
-	public void setUp() {
-
-		String browser;
+@Parameters("browser")
+	@BeforeMethod(enabled = false)
+	public void setUpCrossBrowser(String browser) {
 		String url;
-browser=prop.getProperty("browser");
+
 url=prop.getProperty("url");
 initialize(browser,url);
 
 	}
-	@AfterMethod
-	public void tearDown() {
-		//driver.close();
-	}
-
+@BeforeMethod(enabled = true,alwaysRun = true)
+public void setUp() {
+	String browser;
+			String url;
+	browser=prop.getProperty("browser");
+	url=prop.getProperty("url");
+	initialize(browser,url);
 }
+	@AfterMethod(alwaysRun = true)
+	public void tearDown(ITestResult itestresult) {
+		driver.close();
+		screenshot=new ScreenShot();
+		if(itestresult.getStatus()==ITestResult.FAILURE) {
+			String testCaseName=itestresult.getName();
+			screenshot	=new ScreenShot();
+			//screenshot.take_ScreenShot(driver, testCaseName);
+		}
+	}
+}
+
+

@@ -1,5 +1,6 @@
 package com.supermarket.utilities;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,22 +39,6 @@ public class PageUtility {
 		js.executeScript("arguments[0].click();", element);
 		
 	}
-	public void mouse_click(WebElement element) {
-		Actions action=new Actions(driver);
-		action.click(element).build().perform();
-	}
-	public void mouse_DoubleClick(WebElement element) {
-		Actions action=new Actions(driver);
-		action.doubleClick(element).build().perform();
-	}
-	public void mouse_ClickAndHold(WebElement element) {
-		Actions action=new Actions(driver);
-		action.clickAndHold(element).build().perform();
-	}
-	public void mouse_ContextClick(WebElement element) {
-		Actions action=new Actions(driver);
-		action.contextClick(element).build().perform();
-	}
 	
 	public void scrollAndClick(WebElement element) {
 		int x=0;
@@ -74,5 +59,7 @@ public class PageUtility {
 		}
 		
 	}
-}
+	
+	}
+
 

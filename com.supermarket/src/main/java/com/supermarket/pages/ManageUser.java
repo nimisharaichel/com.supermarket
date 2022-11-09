@@ -20,6 +20,9 @@ PageUtility pageutility;
 @FindBy(xpath="//i[@class='nav-icon fas fa-user']")
 private WebElement manageuserLink;
 
+@FindBy(xpath="//div[@class='alert alert-success alert-dismissible']")
+private WebElement alertMessageOfChangeStatus;
+
 @FindBy(xpath="//a[@class='btn btn-rounded btn-primary']")
 private WebElement searchFieldLink;
 
@@ -37,6 +40,14 @@ private WebElement searchByStatus;
 
 @FindBy(xpath="//button[@class='btn btn-block-sm btn-danger']")
 private WebElement searchButton;
+
+@FindBy(xpath="//tbody//tr[1]//td[1]")
+private WebElement searchDataResult;
+
+@FindBy(xpath="//span[@id='res']")
+private WebElement resultNotFoundText;
+
+
 
 public ManageUser(WebDriver driver) {
 	this.driver=driver;
@@ -64,6 +75,11 @@ public void deactivate_User(String users) {
 }
 	WebElement deactivateButton=driver.findElement(By.xpath("//tbody//tr["+i+"]//td[5]//a"));
 	deactivateButton.click();
+	
+}
+public String getAttribute_ChangeStatusOfManageUser() {
+	generalutility=new GeneralUtility(driver);
+	return generalutility.getAttributeOfElement(alertMessageOfChangeStatus, "class");
 	
 }
 public void deleteData_User(String users) {
@@ -101,14 +117,22 @@ public void searchByPhoneNo_ManageUser(String phoneNo) {
 	
 	searchByPhoneNo.sendKeys(phoneNo);
 }
-public void searchBystatus_ManageUser() {
+public void searchBystatus_ManageUser(int value) {
 	searchByStatus.click();
 	pageutility=new PageUtility(driver);
 	//pageutility.select_ByValue("active", searchByStatus);
-	pageutility.select_ByIndex(2, searchByStatus);
+	pageutility.select_ByIndex(value, searchByStatus);
 }
 public void click_searchButtonOfManageUser() {
 	searchButton.click();
+}
+public String getText_SearchDataOfManageUser() {
+	generalutility=new GeneralUtility(driver);
+	return generalutility.get_Text(searchDataResult);
+}
+public String getText_SearchInvalidDataOfManageUser() {
+	generalutility=new GeneralUtility(driver);
+	return generalutility.get_Text(resultNotFoundText);
 }
 
 }
